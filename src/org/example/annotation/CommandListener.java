@@ -26,17 +26,30 @@ public class CommandListener
         //Какой-то функционал, на Ваше усмотрение.
     }
 
-    @Command(name = "пока", args = "", desc = "", aliases = {"удачи"})
+    @Command(name = "пока", args = "", desc = "Прощается", aliases = {"удачи"})
     public void bie(String[] args)
     {
         // Функционал
-        Method[] methods = this.getClass().getDeclaredMethods();  // Все методы, включая приватные (насчёт родительских - неизвестно, надо уточнять)
+//        Method[] methods = this.getClass().getDeclaredMethods();  // Все методы, включая приватные (насчёт родительских - неизвестно, надо уточнять)
+        try {
+            Method helloVoid = this.getClass().getDeclaredMethod("bie", new Class[]{String[].class});
+            Command command = helloVoid.getAnnotation(Command.class);
+            String s = command.name(); // привет
+            System.out.println(s);
+            String[] s2 = command.aliases(); // привет
+            for (String s3:s2) {
+                System.out.println(s3);
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     @Command(name = "помощь", args = "", desc = "Выводит список команд", aliases = {"help", "команды"})
     public void help(String[] args)
     {
         StringBuilder sb = new StringBuilder("Список команд: \n");
+        Method[] methods = this.getClass().getDeclaredMethods();
         for (Method m : this.getClass().getDeclaredMethods())
         {
             if (m.isAnnotationPresent(Command.class))
@@ -55,6 +68,6 @@ public class CommandListener
             }
         }
         //Отправка sb.toString();
-
+        System.out.println("sb " + sb.toString());
     }
 }
